@@ -23,10 +23,20 @@ async function browseDaraz() {
 
   // waiting for search bar to load
   await page.waitForSelector("#q");
-  await page.type("#q", "fidget spinner");
+  await page.type("#q", "gym shirts");
 
   //waiting for the search button to show up
   await page.waitForSelector(".search-box__search--2fC5");
   await page.click(".search-box__search--2fC5");
+
+  //Picking up the prices
+  await page.waitForSelector(".currency--GVKjl");
+  console.log(
+    await page.$$eval(".currency--GVKjl", (spans) => {
+      return [...spans].map((span) => {
+        return span.innerHTML.split(". ")[1];
+      });
+    })
+  );
 }
 browseDaraz();
