@@ -1,6 +1,16 @@
 const puppeteer = require("puppeteer");
 
 async function browseDaraz() {
+  const getPrices = async (page) => {
+    //Picking up the prices
+    await page.waitForSelector(".currency--GVKjl");
+    return await page.$$eval(".currency--GVKjl", (spans) => {
+      return [...spans].map((span) => {
+        return span.innerHTML.split(". ")[1];
+      });
+    });
+  };
+
   const browser = await puppeteer.launch({
     headless: false,
     ignoreDefaultArgs: ["--disable-extentions"],
@@ -29,14 +39,6 @@ async function browseDaraz() {
   await page.waitForSelector(".search-box__search--2fC5");
   await page.click(".search-box__search--2fC5");
 
-  //Picking up the prices
-  await page.waitForSelector(".currency--GVKjl");
-  console.log(
-    await page.$$eval(".currency--GVKjl", (spans) => {
-      return [...spans].map((span) => {
-        return span.innerHTML.split(". ")[1];
-      });
-    })
-  );
+  console.log(await getPrices(page));
 }
 browseDaraz();
