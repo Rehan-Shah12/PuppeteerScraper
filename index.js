@@ -11,6 +11,16 @@ async function browseDaraz() {
     });
   };
 
+  //Picking up the names
+  const getNames = async (page) => {
+    await page.waitForSelector("div.title--wFj93 > a");
+    return await page.$$eval("div.title--wFj93 > a", (titles) => {
+      return [...titles].map((title) => {
+        return title.innerHTML;
+      });
+    });
+  };
+
   const browser = await puppeteer.launch({
     headless: false,
     ignoreDefaultArgs: ["--disable-extentions"],
@@ -40,5 +50,8 @@ async function browseDaraz() {
   await page.click(".search-box__search--2fC5");
 
   console.log(await getPrices(page));
+  console.log(await getNames(page));
+
+  await browser.close();
 }
 browseDaraz();
