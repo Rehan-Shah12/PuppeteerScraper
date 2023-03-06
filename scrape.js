@@ -41,7 +41,7 @@ const cheerio = require("cheerio");
     const name = $(element).find("div.title--wFj93 > a").text().trim();
     const price = $(element).find("span.currency--GVKjl").text().trim();
     const image = $(element).find("img.image--WOyuZ ").attr("src");
-    // const stars = $(element).find("div.stars").attr("data-rating");
+    // const stars = $(element).find(".rating--ZI3Ol > span > i");
 
     products.push({ name, price, image });
   });
