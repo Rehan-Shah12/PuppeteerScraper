@@ -1,7 +1,16 @@
+const express = require("express");
+const bodyParser = require("body-parser");
 const puppeteer = require("puppeteer");
-const fs = require("fs");
 const cheerio = require("cheerio");
-(async () => {
+
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.json());
+
+app.post("/search", async (req, res) => {
+  const query = req.body.query;
+
   const browser = await puppeteer.launch({
     headless: false,
     ignoreDefaultArgs: ["--disable-extentions"],
@@ -27,10 +36,7 @@ const cheerio = require("cheerio");
   await page.waitForSelector(
     "div.control.header__search-bar.is-relative > input"
   );
-  await page.type(
-    "div.control.header__search-bar.is-relative > input",
-    "shirts"
-  );
+  await page.type("div.control.header__search-bar.is-relative > input", query);
   await page.keyboard.press("Enter");
 
   await page.waitForNavigation();
@@ -64,9 +70,11 @@ const cheerio = require("cheerio");
     products.push({ name, price, saleprice, imgsrc, desc, link });
   });
 
-  const jsonData = JSON.stringify(products, null, 2); // This line stringifies the response
-  // console.log(products);
-  fs.writeFileSync("elo_search_data.json", jsonData);
+  res.json(products);
 
   await browser.close();
-})();
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
