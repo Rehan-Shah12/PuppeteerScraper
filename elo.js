@@ -55,7 +55,7 @@ app.post("/search", async (req, res) => {
   ).each((index, element) => {
     const name = $(element).find("h3.search-result__title > a").text();
     const price = $(element).find("span.price > span.money").text().trim();
-    const saleprice = $(element)
+    const orignalprice = $(element)
       .find("span.compare-at-price > span.money")
       .text()
       .trim();
@@ -68,7 +68,7 @@ app.post("/search", async (req, res) => {
       .find("h3.search-result__title > a")
       .attr("href");
     const link = "https://www.exportleftovers.com" + halflink;
-    products.push({ name, price, saleprice, imgsrc, desc, link });
+    products.push({ name, price, orignalprice, imgsrc, desc, link });
   });
 
   res.json(products);

@@ -1,5 +1,8 @@
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
+const express = require("express");
+const bodyParser = require("body-parser");
+const fs = require("fs");
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -41,12 +44,16 @@ const cheerio = require("cheerio");
     const name = $(element).find("div.title--wFj93 > a").text().trim();
     const price = $(element).find("span.currency--GVKjl").text().trim();
     const image = $(element).find("img.image--WOyuZ ").attr("src");
-    // const stars = $(element).find(".rating--ZI3Ol > span > i");
+    const orignalprice = $(element)
+      .find("span.origPrice--AJxRs > del.currency--GVKjl")
+      .text();
+    const link = $(element).find("div.title--wFj93 > a").attr("href").trim();
 
-    products.push({ name, price, image });
+    products.push({ name, price, orignalprice, image, link });
   });
 
-  console.log(JSON.stringify(products, null, 2));
+  const jsonData = JSON.stringify(products, null, 2);
+  fs.writeFileSync("daraz_search_data.json", jsonData);
 
   await browser.close();
 })();
