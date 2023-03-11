@@ -1,7 +1,16 @@
-const puppeteer = require("puppeteer");
+const express = require("express");
+const bodyParser = require("body-parser");
 const fs = require("fs");
+const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
-(async () => {
+
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.json());
+
+app.post("/search", async (req, res) => {
+  const query = req.body.query;
   const browser = await puppeteer.launch({
     headless: false,
     ignoreDefaultArgs: ["--disable-extentions"],
@@ -25,7 +34,7 @@ const cheerio = require("cheerio");
 
   // waiting for search bar to load
   await page.waitForSelector("input#search");
-  await page.type("input#search", "shirts");
+  await page.type("input#search", query);
   await page.keyboard.press("Enter");
 
   await page.waitForNavigation();
@@ -56,4 +65,8 @@ const cheerio = require("cheerio");
   fs.writeFileSync("ishopping_search_data.json", jsonData);
 
   await browser.close();
-})();
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});

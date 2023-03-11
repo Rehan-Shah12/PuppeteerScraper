@@ -4,7 +4,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 
-(async () => {
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.json());
+
+app.post("/search", async (req, res) => {
+  const query = req.body.query;
   const browser = await puppeteer.launch({
     headless: false,
     ignoreDefaultArgs: ["--disable-extentions"],
@@ -28,7 +34,7 @@ const fs = require("fs");
 
   // waiting for search bar to load
   await page.waitForSelector("#q");
-  await page.type("#q", "gym shirts");
+  await page.type("#q", query);
 
   //waiting for the search button to show up
   await page.waitForSelector(".search-box__search--2fC5");
@@ -56,4 +62,8 @@ const fs = require("fs");
   fs.writeFileSync("daraz_search_data.json", jsonData);
 
   await browser.close();
-})();
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
