@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const fs = require("fs");
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 
@@ -71,6 +72,8 @@ app.post("/search", async (req, res) => {
   });
 
   res.json(products);
+  const jsonData = JSON.stringify(products, null, 2);
+  fs.writeFileSync("elo_search_data.json", jsonData);
 
   await browser.close();
 });
