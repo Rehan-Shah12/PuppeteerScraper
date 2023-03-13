@@ -5,7 +5,7 @@ const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 app.use(bodyParser.json());
 
@@ -42,7 +42,7 @@ app.post("/search", async (req, res) => {
 
   await page.waitForNavigation();
   await page.waitForSelector(
-    "#shopify-section-template--16138296656051__main > section > div.container.search__content > main > div.search__results-list > div:nth-child(2) > div.one-fourth.column.search-result__image-container.small-down--one-whole > a > div > img"
+    "#shopify-section-template--16146192761011__main > section > div.container.search__content > main > div.search__results-list > div"
   );
 
   const html = await page.content();
@@ -51,7 +51,7 @@ app.post("/search", async (req, res) => {
   const products = [];
 
   $(
-    "#shopify-section-template--16138296656051__main > section > div.container.search__content > main > div.search__results-list > div"
+    "#shopify-section-template--16146192761011__main > section > div.container.search__content > main > div.search__results-list > div"
   ).each((index, element) => {
     const name = $(element).find("h3.search-result__title > a").text();
     const price = $(element).find("span.price > span.money").text().trim();
@@ -59,16 +59,15 @@ app.post("/search", async (req, res) => {
       .find("span.compare-at-price > span.money")
       .text()
       .trim();
-    const imgsrc = $(element)
+    const image = $(element)
       .find("div.image-element__wrap > img")
-      .attr("data-src")
-      .trim();
+      .attr("data-src");
     const desc = $(element).find("div.has-padding-top > p").text().trim();
     const halflink = $(element)
       .find("h3.search-result__title > a")
       .attr("href");
     const link = "https://www.exportleftovers.com" + halflink;
-    products.push({ name, price, orignalprice, imgsrc, desc, link });
+    products.push({ name, price, orignalprice, image, desc, link });
   });
 
   res.json(products);

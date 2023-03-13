@@ -5,15 +5,22 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "sample.js"
+    "start": "sample.js",
+    "scrape1": "node scrape.js",
+    "scrape2": "node elo.js",
+    "scrape3": "node ishopping.js",
+    "proxyserver": "node proxyserver.js",
+    "scrape-all": "concurrently \"npm run scrape1\" \"npm run scrape2\" \"npm run scrape3\" \"npm run proxyserver\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
     "cheerio": "^1.0.0-rc.12",
+    "concurrently": "^7.6.0",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
+    "http-proxy-middleware": "^2.0.6",
     "puppeteer": "^19.6.3",
     "request": "^2.88.2"
   }

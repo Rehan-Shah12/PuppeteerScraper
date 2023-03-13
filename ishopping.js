@@ -5,7 +5,7 @@ const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 
 const app = express();
-const port = 3000;
+const port = 5000;
 
 app.use(bodyParser.json());
 
@@ -51,12 +51,12 @@ app.post("/search", async (req, res) => {
       .text()
       .trim();
     const oldprice = $(element).find("p.old-price > span.price").text().trim();
-    const imgsrc = $(element)
+    const image = $(element)
       .find("div.inner-grid > a.product-image > img")
       .attr("src");
     //   const desc = $(element).find("div.has-padding-top > p").text().trim();
     const link = $(element).find("h2.product-name > a").attr("href");
-    products.push({ name, price, oldprice, imgsrc, link });
+    products.push({ name, price, oldprice, image, link });
   });
   //   console.log(JSON.stringify(products, null, 2));
 
